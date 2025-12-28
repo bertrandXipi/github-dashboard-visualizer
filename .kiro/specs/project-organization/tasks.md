@@ -221,8 +221,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Tester que tous les composants sont présents
     - Tester la sauvegarde des modifications
 
-- [ ] 12. Intégration dans ProjectFilters
-  - [ ] 12.1 Mettre à jour ProjectFilters
+- [x] 12. Intégration dans ProjectFilters
+  - [x] 12.1 Mettre à jour ProjectFilters
     - Modifier `src/components/projects/project-filters.tsx`
     - Ajouter filtre par tags (multi-select)
     - Ajouter filtre par statut manuel
@@ -230,7 +230,7 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Ajouter filtre clonés/non-clonés
     - _Requirements: 1.6, 2.7, 5.6, 7.4, 7.5, 8.4_
   
-  - [ ] 12.2 Mettre à jour la page Projects
+  - [x] 12.2 Mettre à jour la page Projects
     - Modifier `src/app/projects/page.tsx`
     - Intégrer le tri par organisation (pinned > favorites > others)
     - Appliquer les nouveaux filtres

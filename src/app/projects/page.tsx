@@ -5,19 +5,31 @@ import { useRouter } from 'next/navigation'
 import { Sparkles, Loader2 } from 'lucide-react'
 import { DashboardLayout } from '@/components/layout'
 import { ProjectCard, ProjectFilters, ProjectModal, ProjectListItem } from '@/components/projects'
+import type { ExtendedFilters } from '@/components/projects/project-filters'
 import { LoadingScreen } from '@/components/loading-screen'
 import { Button } from '@/components/ui/button'
-import { useAuthStore, useActivityStore, useSettingsStore } from '@/lib/stores'
+import { useAuthStore, useActivityStore, useSettingsStore, useOrganizationStore } from '@/lib/stores'
 import { getRepoActivityData } from '@/lib/utils/calculations'
+import { 
+  sortProjectsByOrganization, 
+  filterProjectsByTags, 
+  filterProjectsByStatus,
+  filterProjectsByCloneStatus,
+  filterProjectsByFavorite,
+} from '@/lib/utils/organization'
 import { toast } from 'sonner'
-import type { RepositoryFilters, Repository } from '@/types'
+import type { Repository } from '@/types'
 
-const defaultFilters: RepositoryFilters = {
+const defaultFilters: ExtendedFilters = {
   search: '',
   status: 'all',
   language: 'all',
   sortBy: 'lastActivity',
   sortOrder: 'desc',
+  tagIds: [],
+  manualStatus: 'all',
+  favoritesOnly: false,
+  cloneStatus: 'all',
 }
 
 export default function ProjectsPage() {
@@ -25,9 +37,15 @@ export default function ProjectsPage() {
   const { username, isAuthenticated, isLoading: authLoading, loadFromCache: loadAuth, getDecryptedToken } = useAuthStore()
   const { repositories, commits, loadFromCache: loadActivity, updateRepoSummary, syncWithGitHub } = useActivityStore()
   const { loadFromCache: loadSettings } = useSettingsStore()
+  const { 
+    projectOrganizations, 
+    machineInfo,
+    loadFromCache: loadOrganization,
+    isInitialized: orgInitialized,
+  } = useOrganizationStore()
   
   const [isInitialized, setIsInitialized] = useState(false)
-  const [filters, setFilters] = useState<RepositoryFilters>(defaultFilters)
+  const [filters, setFilters] = useState<ExtendedFilters>(defaultFilters)
   const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [isGeneratingAll, setIsGeneratingAll] = useState(false)
@@ -56,10 +74,11 @@ export default function ProjectsPage() {
       await loadAuth()
       loadSettings()
       loadActivity()
+      loadOrganization()
       setIsInitialized(true)
     }
     init()
-  }, [loadAuth, loadSettings, loadActivity])
+  }, [loadAuth, loadSettings, loadActivity, loadOrganization])
   
   // Redirect if not authenticated
   useEffect(() => {
@@ -147,7 +166,7 @@ export default function ProjectsPage() {
       )
     }
     
-    // Status filter
+    // Status filter (GitHub activity status)
     if (filters.status !== 'all') {
       result = result.filter(repo => repo.status === filters.status)
     }
@@ -157,32 +176,66 @@ export default function ProjectsPage() {
       result = result.filter(repo => repo.language === filters.language)
     }
     
-    // Sort
+    // Organization filters
+    if (filters.tagIds.length > 0) {
+      result = filterProjectsByTags(result, projectOrganizations, filters.tagIds)
+    }
+    
+    if (filters.manualStatus !== 'all') {
+      result = filterProjectsByStatus(result, projectOrganizations, filters.manualStatus)
+    }
+    
+    if (filters.favoritesOnly) {
+      result = filterProjectsByFavorite(result, projectOrganizations, true)
+    }
+    
+    if (filters.cloneStatus !== 'all' && machineInfo) {
+      result = filterProjectsByCloneStatus(
+        result, 
+        projectOrganizations, 
+        machineInfo.id, 
+        filters.cloneStatus === 'cloned'
+      )
+    }
+    
+    // Sort by organization first (pinned > favorites > others)
+    result = sortProjectsByOrganization(result, projectOrganizations)
+    
+    // Then apply secondary sort
     result.sort((a, b) => {
-      let comparison = 0
-      switch (filters.sortBy) {
-        case 'lastActivity':
-          comparison = new Date(b.lastCommitDate || 0).getTime() - 
-                       new Date(a.lastCommitDate || 0).getTime()
-          break
-        case 'name':
-          comparison = a.name.localeCompare(b.name)
-          break
-        case 'stars':
-          comparison = b.stars - a.stars
-          break
-        case 'commits':
-          const aCommits = commits.filter(c => c.repoName === a.name).length
-          const bCommits = commits.filter(c => c.repoName === b.name).length
-          comparison = bCommits - aCommits
-          break
+      // Keep organization sort as primary
+      const orgA = projectOrganizations[a.id] || { isPinned: false, isFavorite: false }
+      const orgB = projectOrganizations[b.id] || { isPinned: false, isFavorite: false }
+      
+      // If both have same org priority, apply secondary sort
+      if (orgA.isPinned === orgB.isPinned && orgA.isFavorite === orgB.isFavorite) {
+        let comparison = 0
+        switch (filters.sortBy) {
+          case 'lastActivity':
+            comparison = new Date(b.lastCommitDate || 0).getTime() - 
+                         new Date(a.lastCommitDate || 0).getTime()
+            break
+          case 'name':
+            comparison = a.name.localeCompare(b.name)
+            break
+          case 'stars':
+            comparison = b.stars - a.stars
+            break
+          case 'commits':
+            const aCommits = commits.filter(c => c.repoName === a.name).length
+            const bCommits = commits.filter(c => c.repoName === b.name).length
+            comparison = bCommits - aCommits
+            break
+        }
+        return filters.sortOrder === 'desc' ? comparison : -comparison
       }
-      return filters.sortOrder === 'desc' ? comparison : -comparison
+      
+      return 0 // Keep organization sort order
     })
     
     // Limit to 100
     return result.slice(0, 100)
-  }, [repositories, commits, filters])
+  }, [repositories, commits, filters, projectOrganizations, machineInfo])
   
   // Get last commit message for each repo
   const getLastCommitMessage = (repoName: string) => {
