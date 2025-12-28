@@ -240,7 +240,7 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Tester chaque filtre individuellement
     - Tester la combinaison de filtres
 
-- [ ] 13. Checkpoint - UI Complete
+- [x] 13. Checkpoint - UI Complete
   - Vérifier que tous les tests passent
   - Tester manuellement l'interface complète
   - Vérifier le responsive design
@@ -275,20 +275,20 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - **Property 21: Offline Queue Persistence**
     - **Validates: Requirements 6.4, 6.7, 6.8**
 
-- [ ] 15. Composant SyncIndicator
-  - [ ] 15.1 Créer le composant SyncIndicator
+- [x] 15. Composant SyncIndicator
+  - [x] 15.1 Créer le composant SyncIndicator
     - Créer `src/components/organization/sync-indicator.tsx`
     - Afficher l'état de sync (synced, syncing, offline, error)
     - Afficher la date de dernière sync
     - Bouton pour forcer la sync
     - _Requirements: 6.9_
   
-  - [ ] 15.2 Intégrer dans le Header
+  - [x] 15.2 Intégrer dans le Header
     - Ajouter SyncIndicator dans le header
     - _Requirements: 6.9_
 
-- [ ] 16. Machine ID et Multi-Machines
-  - [ ] 16.1 Implémenter la gestion des machines
+- [x] 16. Machine ID et Multi-Machines
+  - [x] 16.1 Implémenter la gestion des machines
     - Générer Machine_ID au premier lancement
     - Stocker dans LocalStorage
     - Sync avec Supabase

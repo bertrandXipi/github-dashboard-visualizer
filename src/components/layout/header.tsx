@@ -10,6 +10,7 @@ import { getInitials } from '@/lib/utils/formatters'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { MobileNav } from './mobile-nav'
 import { ReportModal } from '@/components/dashboard'
+import { SyncIndicator } from '@/components/organization'
 
 interface HeaderProps {
   onRefresh?: () => void
@@ -47,6 +48,9 @@ export function Header({ onRefresh, isRefreshing }: HeaderProps) {
           
           {/* Right side */}
           <div className="flex items-center gap-3">
+            {/* Sync indicator */}
+            <SyncIndicator />
+            
             {/* Report button */}
             <Button
               variant="outline"
