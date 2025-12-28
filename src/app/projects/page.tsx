@@ -2,11 +2,15 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { Sparkles, Loader2 } from 'lucide-react'
 import { DashboardLayout } from '@/components/layout'
 import { ProjectCard, ProjectFilters, ProjectModal } from '@/components/projects'
 import { LoadingScreen } from '@/components/loading-screen'
+import { Button } from '@/components/ui/button'
 import { useAuthStore, useActivityStore, useSettingsStore } from '@/lib/stores'
 import { getRepoActivityData } from '@/lib/utils/calculations'
+import { getReadme } from '@/lib/github/api'
+import { toast } from 'sonner'
 import type { RepositoryFilters, Repository } from '@/types'
 
 const defaultFilters: RepositoryFilters = {
@@ -19,14 +23,16 @@ const defaultFilters: RepositoryFilters = {
 
 export default function ProjectsPage() {
   const router = useRouter()
-  const { isAuthenticated, isLoading: authLoading, loadFromCache: loadAuth } = useAuthStore()
-  const { repositories, commits, loadFromCache: loadActivity } = useActivityStore()
+  const { username, isAuthenticated, isLoading: authLoading, loadFromCache: loadAuth, getDecryptedToken } = useAuthStore()
+  const { repositories, commits, loadFromCache: loadActivity, updateRepoSummary } = useActivityStore()
   const { loadFromCache: loadSettings } = useSettingsStore()
   
   const [isInitialized, setIsInitialized] = useState(false)
   const [filters, setFilters] = useState<RepositoryFilters>(defaultFilters)
   const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const [isGeneratingAll, setIsGeneratingAll] = useState(false)
+  const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 })
   
   // Initialize
   useEffect(() => {
@@ -55,6 +61,64 @@ export default function ProjectsPage() {
     return Array.from(langs).sort()
   }, [repositories])
   
+  // Count repos without summary
+  const reposWithoutSummary = useMemo(() => 
+    repositories.filter(r => !r.aiSummary),
+    [repositories]
+  )
+  
+  // Generate all summaries
+  const handleGenerateAll = async () => {
+    if (isGeneratingAll || !username) return
+    
+    const toGenerate = reposWithoutSummary.slice(0, 20) // Limit to 20 at a time
+    if (toGenerate.length === 0) {
+      toast.info('Tous les projets ont déjà un résumé')
+      return
+    }
+    
+    setIsGeneratingAll(true)
+    setGenerationProgress({ current: 0, total: toGenerate.length })
+    
+    const token = await getDecryptedToken()
+    let successCount = 0
+    
+    for (let i = 0; i < toGenerate.length; i++) {
+      const repo = toGenerate[i]
+      setGenerationProgress({ current: i + 1, total: toGenerate.length })
+      
+      try {
+        const readme = await getReadme(username, repo.name, token || undefined)
+        
+        const response = await fetch('/api/summarize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            repoName: repo.name,
+            owner: username,
+            readme,
+            description: repo.description,
+            language: repo.language,
+          }),
+        })
+        
+        if (response.ok) {
+          const { summary } = await response.json()
+          updateRepoSummary(repo.id, summary)
+          successCount++
+        }
+      } catch (error) {
+        console.error(`Error generating summary for ${repo.name}:`, error)
+      }
+      
+      // Small delay to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 500))
+    }
+    
+    setIsGeneratingAll(false)
+    toast.success(`${successCount} résumé${successCount > 1 ? 's' : ''} généré${successCount > 1 ? 's' : ''} !`)
+  }
+  
   // Filter and sort repositories
   const filteredRepos = useMemo(() => {
     let result = [...repositories]
@@ -64,7 +128,8 @@ export default function ProjectsPage() {
       const search = filters.search.toLowerCase()
       result = result.filter(repo => 
         repo.name.toLowerCase().includes(search) ||
-        repo.description?.toLowerCase().includes(search)
+        repo.description?.toLowerCase().includes(search) ||
+        repo.aiSummary?.toLowerCase().includes(search)
       )
     }
     
@@ -122,11 +187,35 @@ export default function ProjectsPage() {
   return (
     <DashboardLayout showStatsPanel={false}>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold">Mes Projets</h1>
-          <p className="text-muted-foreground">
-            {repositories.length} projet{repositories.length !== 1 ? 's' : ''} au total
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Mes Projets</h1>
+            <p className="text-muted-foreground">
+              {repositories.length} projet{repositories.length !== 1 ? 's' : ''} au total
+              {reposWithoutSummary.length > 0 && (
+                <span> • {reposWithoutSummary.length} sans résumé</span>
+              )}
+            </p>
+          </div>
+          
+          {reposWithoutSummary.length > 0 && (
+            <Button
+              onClick={handleGenerateAll}
+              disabled={isGeneratingAll}
+            >
+              {isGeneratingAll ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {generationProgress.current}/{generationProgress.total}
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Générer tous les résumés
+                </>
+              )}
+            </Button>
+          )}
         </div>
         
         <ProjectFilters

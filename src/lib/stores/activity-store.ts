@@ -51,6 +51,7 @@ interface ActivityState {
   syncWithGitHub: (username: string, token?: string) => Promise<void>
   refreshData: (username: string, token?: string) => Promise<void>
   setHasNewData: (value: boolean) => void
+  updateRepoSummary: (repoId: number, summary: string) => void
   reset: () => void
 }
 
@@ -216,6 +217,28 @@ export const useActivityStore = create<ActivityState>((set, get) => ({
   
   setHasNewData: (value: boolean) => {
     set({ hasNewData: value })
+  },
+  
+  updateRepoSummary: (repoId: number, summary: string) => {
+    const { repositories } = get()
+    const updatedRepos = repositories.map(repo => 
+      repo.id === repoId 
+        ? { ...repo, aiSummary: summary, aiSummaryDate: new Date().toISOString() }
+        : repo
+    )
+    set({ repositories: updatedRepos })
+    
+    // Also update cache
+    const { userProfile, commits, weeksActivity, globalStats } = get()
+    if (userProfile) {
+      saveActivityCache({
+        userProfile,
+        repositories: updatedRepos,
+        commits,
+        weeksActivity,
+        globalStats: globalStats || undefined,
+      })
+    }
   },
   
   reset: () => {

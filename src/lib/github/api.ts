@@ -377,3 +377,37 @@ export async function validateToken(token: string): Promise<boolean> {
     return false
   }
 }
+
+
+// ============ README ============
+
+/**
+ * Get README content for a repository
+ */
+export async function getReadme(
+  owner: string,
+  repo: string,
+  token?: string
+): Promise<string | null> {
+  try {
+    const response = await fetch(
+      `${GITHUB_API_BASE}/repos/${owner}/${repo}/readme`,
+      {
+        headers: {
+          ...createHeaders(token),
+          'Accept': 'application/vnd.github.raw+json',
+        },
+      }
+    )
+    
+    if (!response.ok) {
+      return null
+    }
+    
+    const content = await response.text()
+    // Limit to first 4000 chars to avoid token limits
+    return content.slice(0, 4000)
+  } catch {
+    return null
+  }
+}

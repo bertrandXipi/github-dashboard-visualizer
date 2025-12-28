@@ -8,6 +8,7 @@ export {
   checkRateLimit,
   validateUsername,
   validateToken,
+  getReadme,
 } from './api'
 
 // Types

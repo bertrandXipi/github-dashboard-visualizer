@@ -1,6 +1,7 @@
 'use client'
 
-import { ExternalLink, GitCommit, Star, GitFork } from 'lucide-react'
+import { useState } from 'react'
+import { ExternalLink, GitCommit, Star, GitFork, Sparkles, Loader2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,6 +9,9 @@ import { MiniActivityGraph } from '@/components/charts/mini-activity-graph'
 import { getStatusColor, getStatusLabel } from '@/lib/utils/calculations'
 import { formatDate } from '@/lib/utils/date-helpers'
 import { formatCommitMessage, getLanguageColor, formatNumber } from '@/lib/utils/formatters'
+import { useActivityStore, useAuthStore } from '@/lib/stores'
+import { getReadme } from '@/lib/github/api'
+import { toast } from 'sonner'
 import type { Repository } from '@/types'
 
 interface ProjectCardProps {
@@ -24,15 +28,60 @@ export function ProjectCard({
   onCardClick 
 }: ProjectCardProps) {
   const { 
+    id,
     name, 
+    fullName,
     description, 
     language, 
     status, 
     stars, 
     forks,
     lastCommitDate,
-    htmlUrl 
+    htmlUrl,
+    aiSummary 
   } = repository
+  
+  const [isGenerating, setIsGenerating] = useState(false)
+  const { updateRepoSummary } = useActivityStore()
+  const { username, getDecryptedToken } = useAuthStore()
+  
+  const handleGenerateSummary = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (isGenerating || !username) return
+    
+    setIsGenerating(true)
+    try {
+      // Get README
+      const token = await getDecryptedToken()
+      const readme = await getReadme(username, name, token || undefined)
+      
+      // Call API to generate summary
+      const response = await fetch('/api/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          repoName: name,
+          owner: username,
+          readme,
+          description,
+          language,
+        }),
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate summary')
+      }
+      
+      const { summary } = await response.json()
+      updateRepoSummary(id, summary)
+      toast.success('Résumé généré !')
+    } catch (error) {
+      console.error('Error generating summary:', error)
+      toast.error('Erreur lors de la génération du résumé')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
   
   return (
     <Card 
@@ -75,11 +124,33 @@ export function ProjectCard({
           </Button>
         </div>
         
-        {/* Description */}
-        {description && (
+        {/* AI Summary or Description */}
+        {aiSummary ? (
+          <p className="text-sm text-foreground line-clamp-3">
+            {aiSummary}
+          </p>
+        ) : description ? (
           <p className="text-sm text-muted-foreground line-clamp-2">
             {description}
           </p>
+        ) : null}
+        
+        {/* Generate summary button */}
+        {!aiSummary && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full text-xs"
+            onClick={handleGenerateSummary}
+            disabled={isGenerating}
+          >
+            {isGenerating ? (
+              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+            ) : (
+              <Sparkles className="h-3 w-3 mr-1" />
+            )}
+            {isGenerating ? 'Génération...' : 'Générer un résumé IA'}
+          </Button>
         )}
         
         {/* Last activity */}

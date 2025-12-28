@@ -26,6 +26,8 @@ export interface Repository {
   status: RepositoryStatus
   htmlUrl: string
   defaultBranch: string
+  aiSummary?: string // AI-generated summary
+  aiSummaryDate?: string // When the summary was generated
 }
 
 /**
