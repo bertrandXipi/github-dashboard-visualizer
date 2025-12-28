@@ -17,6 +17,22 @@ interface ActivityBarChartProps {
   showLabels?: boolean
 }
 
+// Custom tooltip component
+function CustomTooltip({ active, payload, label }: any) {
+  if (!active || !payload || !payload.length) return null
+  
+  const commits = payload[0].value
+  
+  return (
+    <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 shadow-xl">
+      <p className="text-white font-medium text-sm">{label}</p>
+      <p className="text-emerald-400 text-lg font-bold">
+        {commits} commit{commits !== 1 ? 's' : ''}
+      </p>
+    </div>
+  )
+}
+
 export function ActivityBarChart({ 
   data, 
   height = 120,
@@ -37,35 +53,36 @@ export function ActivityBarChart({
             dataKey="day" 
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+            tick={{ fontSize: 11, fill: '#9ca3af' }}
           />
         )}
         <YAxis hide />
         <Tooltip
-          cursor={{ fill: 'hsl(var(--muted))', opacity: 0.3 }}
-          contentStyle={{
-            backgroundColor: 'hsl(var(--popover))',
-            border: '1px solid hsl(var(--border))',
-            borderRadius: '6px',
-            fontSize: '12px',
-          }}
-          formatter={(value) => [`${value} commit${value !== 1 ? 's' : ''}`, '']}
-          labelFormatter={(label) => label}
+          content={<CustomTooltip />}
+          cursor={{ fill: 'rgba(255,255,255,0.05)' }}
         />
         <Bar 
           dataKey="commits" 
           radius={[4, 4, 0, 0]}
           maxBarSize={40}
         >
-          {chartData.map((entry, index) => (
-            <Cell 
-              key={`cell-${index}`}
-              fill={entry.commits > 0 
-                ? `hsl(var(--primary) / ${0.4 + (entry.commits / maxCommits) * 0.6})`
-                : 'hsl(var(--muted))'
-              }
-            />
-          ))}
+          {chartData.map((entry, index) => {
+            // GitHub green colors based on intensity
+            let fill = '#1e293b' // empty/dark slate
+            if (entry.commits > 0) {
+              const intensity = entry.commits / maxCommits
+              if (intensity > 0.75) fill = '#22c55e' // bright green
+              else if (intensity > 0.5) fill = '#16a34a' // green
+              else if (intensity > 0.25) fill = '#15803d' // darker green
+              else fill = '#166534' // dark green
+            }
+            return (
+              <Cell 
+                key={`cell-${index}`}
+                fill={fill}
+              />
+            )
+          })}
         </Bar>
       </BarChart>
     </ResponsiveContainer>

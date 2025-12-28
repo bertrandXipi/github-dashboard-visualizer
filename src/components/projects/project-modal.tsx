@@ -233,35 +233,45 @@ export function ProjectModal({ repository, open, onOpenChange }: ProjectModalPro
           
           <TabsContent value="activity" className="flex-1 overflow-hidden">
             <ScrollArea className="h-[400px]">
-              <div className="space-y-4 pr-4">
-                {/* Activity chart */}
-                <Card>
-                  <CardContent className="p-4">
-                    <h3 className="text-sm font-medium mb-3">Activité par jour</h3>
-                    <ActivityBarChart data={dailyActivity} />
-                  </CardContent>
-                </Card>
+              <div className="space-y-3 pr-4">
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  {repoCommits.length} commit{repoCommits.length > 1 ? 's' : ''} au total
+                </h3>
                 
-                {/* Recent commits */}
-                <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Commits récents</h3>
-                  {repoCommits.slice(0, 20).map(commit => (
-                    <Card key={commit.sha} className="bg-muted/50">
+                {repoCommits.length === 0 ? (
+                  <Card className="bg-muted/50">
+                    <CardContent className="p-6 text-center">
+                      <GitCommit className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">
+                        Aucun commit trouvé pour ce projet
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  repoCommits.slice(0, 30).map(commit => (
+                    <Card key={commit.sha} className="hover:bg-accent/50 transition-colors">
                       <CardContent className="p-3">
                         <div className="flex items-start gap-3">
-                          <GitCommit className="h-4 w-4 text-muted-foreground mt-0.5" />
+                          <div className="mt-1 p-1.5 rounded-full bg-emerald-500/20">
+                            <GitCommit className="h-3 w-3 text-emerald-500" />
+                          </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm truncate">
-                              {formatCommitMessage(commit.message, 60)}
+                            <p className="text-sm font-medium">
+                              {formatCommitMessage(commit.message, 80)}
                             </p>
-                            <p className="text-xs text-muted-foreground">
-                              {formatDate(commit.date, 'relative')}
-                            </p>
+                            <div className="flex items-center gap-3 mt-1">
+                              <p className="text-xs text-muted-foreground">
+                                {formatDate(commit.date, 'relative')}
+                              </p>
+                              <p className="text-xs text-muted-foreground font-mono">
+                                {commit.sha.slice(0, 7)}
+                              </p>
+                            </div>
                           </div>
                           <Button
                             variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
+                            size="sm"
+                            className="h-7 px-2"
                             onClick={() => window.open(commit.url, '_blank')}
                           >
                             <ExternalLink className="h-3 w-3" />
@@ -269,8 +279,14 @@ export function ProjectModal({ repository, open, onOpenChange }: ProjectModalPro
                         </div>
                       </CardContent>
                     </Card>
-                  ))}
-                </div>
+                  ))
+                )}
+                
+                {repoCommits.length > 30 && (
+                  <p className="text-xs text-center text-muted-foreground py-2">
+                    +{repoCommits.length - 30} commits plus anciens
+                  </p>
+                )}
               </div>
             </ScrollArea>
           </TabsContent>

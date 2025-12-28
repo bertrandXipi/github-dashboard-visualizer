@@ -23,7 +23,7 @@ const defaultFilters: RepositoryFilters = {
 export default function ProjectsPage() {
   const router = useRouter()
   const { username, isAuthenticated, isLoading: authLoading, loadFromCache: loadAuth, getDecryptedToken } = useAuthStore()
-  const { repositories, commits, loadFromCache: loadActivity, updateRepoSummary } = useActivityStore()
+  const { repositories, commits, loadFromCache: loadActivity, updateRepoSummary, syncWithGitHub } = useActivityStore()
   const { loadFromCache: loadSettings } = useSettingsStore()
   
   const [isInitialized, setIsInitialized] = useState(false)
@@ -33,6 +33,22 @@ export default function ProjectsPage() {
   const [isGeneratingAll, setIsGeneratingAll] = useState(false)
   const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 })
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list')
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  
+  // Handle refresh
+  const handleRefresh = async () => {
+    if (!username) return
+    setIsRefreshing(true)
+    try {
+      const token = await getDecryptedToken()
+      await syncWithGitHub(username, token || undefined)
+      toast.success('Données mises à jour !')
+    } catch (error) {
+      toast.error('Erreur lors de la synchronisation')
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
   
   // Initialize
   useEffect(() => {
@@ -183,7 +199,7 @@ export default function ProjectsPage() {
   }
   
   return (
-    <DashboardLayout showStatsPanel={false}>
+    <DashboardLayout showStatsPanel={false} onRefresh={handleRefresh} isRefreshing={isRefreshing}>
       <div className="space-y-6 w-full max-w-full overflow-hidden">
         <div className="flex items-start justify-between">
           <div>

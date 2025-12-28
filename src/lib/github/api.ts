@@ -311,13 +311,8 @@ export async function getAllUserCommits(
         token
       )
       
-      // Filter to only include commits by this user
-      const userCommits = commits.filter(c => 
-        c.authorEmail.toLowerCase().includes(username.toLowerCase()) ||
-        c.authorName.toLowerCase().includes(username.toLowerCase())
-      )
-      
-      allCommits.push(...userCommits)
+      // Include all commits from user's repos (they own them)
+      allCommits.push(...commits)
     } catch (error) {
       // Skip repos that fail (empty, no access, etc.)
       console.warn(`Failed to fetch commits for ${repo.name}:`, error)

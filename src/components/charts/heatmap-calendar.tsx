@@ -8,7 +8,8 @@ import {
   format, 
   getDay,
   subMonths,
-  isSameDay
+  isSameDay,
+  getMonth
 } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
@@ -20,7 +21,7 @@ interface HeatmapCalendarProps {
 }
 
 export function HeatmapCalendar({ commits, months = 3 }: HeatmapCalendarProps) {
-  const { days, maxCommits } = useMemo(() => {
+  const { days, maxCommits, monthLabels } = useMemo(() => {
     const today = new Date()
     const startDate = startOfMonth(subMonths(today, months - 1))
     const endDate = endOfMonth(today)
@@ -42,7 +43,26 @@ export function HeatmapCalendar({ commits, months = 3 }: HeatmapCalendarProps) {
     
     const maxCommits = Math.max(...days.map(d => d.count), 1)
     
-    return { days, maxCommits }
+    // Generate month labels
+    const monthLabels: { name: string; weekIndex: number }[] = []
+    let currentMonth = -1
+    let weekIndex = 0
+    const firstDayOfWeek = getDay(days[0].date)
+    
+    days.forEach((day, i) => {
+      const dayMonth = getMonth(day.date)
+      const dayInWeek = (firstDayOfWeek + i) % 7
+      
+      if (dayMonth !== currentMonth) {
+        currentMonth = dayMonth
+        monthLabels.push({
+          name: format(day.date, 'MMM', { locale: fr }),
+          weekIndex: Math.floor((firstDayOfWeek + i) / 7)
+        })
+      }
+    })
+    
+    return { days, maxCommits, monthLabels }
   }, [commits, months])
   
   const getIntensity = (count: number): string => {
@@ -83,30 +103,54 @@ export function HeatmapCalendar({ commits, months = 3 }: HeatmapCalendarProps) {
   
   return (
     <div className="space-y-2">
-      <div className="flex gap-0.5">
-        {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((day, i) => (
-          <div key={i} className="w-3 h-3 text-[8px] text-muted-foreground flex items-center justify-center">
-            {day}
+      {/* Month labels */}
+      <div className="flex text-xs text-muted-foreground ml-5">
+        {monthLabels.map((label, i) => (
+          <div 
+            key={i} 
+            className="capitalize"
+            style={{ 
+              marginLeft: i === 0 ? `${label.weekIndex * 14}px` : undefined,
+              width: i < monthLabels.length - 1 
+                ? `${(monthLabels[i + 1].weekIndex - label.weekIndex) * 14}px` 
+                : 'auto'
+            }}
+          >
+            {label.name}
           </div>
         ))}
       </div>
-      <div className="flex flex-col gap-0.5">
-        {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="flex gap-0.5">
-            {week.map((day, dayIndex) => (
-              <div
-                key={dayIndex}
-                className={cn(
-                  'w-3 h-3 rounded-sm',
-                  day.count === -1 ? 'bg-transparent' : getIntensity(day.count),
-                  day.isToday && 'ring-1 ring-primary'
-                )}
-                title={day.count >= 0 ? `${format(day.date, 'd MMM', { locale: fr })}: ${day.count} commit${day.count !== 1 ? 's' : ''}` : ''}
-              />
-            ))}
-          </div>
-        ))}
+      
+      <div className="flex gap-2">
+        {/* Day labels */}
+        <div className="flex flex-col gap-0.5 text-[9px] text-muted-foreground">
+          {['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'].map((day, i) => (
+            <div key={i} className="h-3 flex items-center">
+              {i % 2 === 1 ? day : ''}
+            </div>
+          ))}
+        </div>
+        
+        {/* Calendar grid */}
+        <div className="flex gap-0.5">
+          {weeks.map((week, weekIndex) => (
+            <div key={weekIndex} className="flex flex-col gap-0.5">
+              {week.map((day, dayIndex) => (
+                <div
+                  key={dayIndex}
+                  className={cn(
+                    'w-3 h-3 rounded-sm',
+                    day.count === -1 ? 'bg-transparent' : getIntensity(day.count),
+                    day.isToday && 'ring-1 ring-primary'
+                  )}
+                  title={day.count >= 0 ? `${format(day.date, 'd MMMM yyyy', { locale: fr })}: ${day.count} commit${day.count !== 1 ? 's' : ''}` : ''}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
+      
       <div className="flex items-center justify-end gap-1 text-[10px] text-muted-foreground">
         <span>Moins</span>
         <div className="w-2 h-2 rounded-sm bg-muted" />
