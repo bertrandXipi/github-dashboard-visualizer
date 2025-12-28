@@ -172,14 +172,14 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Tester TodoList drag & drop
     - Tester TodoItem toggle
 
-- [ ] 9. Composants UI - Statut et Clone
-  - [ ] 9.1 Créer le composant StatusSelector
+- [x] 9. Composants UI - Statut et Clone
+  - [x] 9.1 Créer le composant StatusSelector
     - Créer `src/components/organization/status-selector.tsx`
     - Dropdown pour sélectionner le statut manuel
     - Option pour effacer (retour au statut auto)
     - _Requirements: 5.1, 5.2, 5.3_
   
-  - [ ] 9.2 Créer le composant CloneStatus
+  - [x] 9.2 Créer le composant CloneStatus
     - Créer `src/components/organization/clone-status.tsx`
     - Toggle pour marquer comme cloné
     - Badge "local" si cloné sur cette machine
