@@ -114,21 +114,21 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test network error handling
     - _Requirements: 13.1, 13.2, 13.3, 13.4_
 
-- [ ] 7. Zustand Stores
-  - [ ] 7.1 Create auth-store
+- [x] 7. Zustand Stores
+  - [x] 7.1 Create auth-store
     - Define AuthState interface
     - Implement setCredentials() and clearCredentials()
     - Implement loadFromCache() to restore auth state
     - _Requirements: 1.1, 1.5_
   
-  - [ ] 7.2 Create activity-store
+  - [x] 7.2 Create activity-store
     - Define ActivityState interface
     - Implement loadFromCache() to load activity data
     - Implement syncWithGitHub() to fetch new data
     - Implement addCommits() and updateRepository()
     - _Requirements: 2.5, 7.4_
   
-  - [ ] 7.3 Create settings-store
+  - [x] 7.3 Create settings-store
     - Define SettingsState interface
     - Implement updateSettings() to save preferences
     - Implement loadFromCache() to restore settings
