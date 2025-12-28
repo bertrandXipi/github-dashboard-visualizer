@@ -123,9 +123,25 @@ export function ProjectCard({
         
         {/* AI Summary or Description */}
         {aiSummary ? (
-          <p className="text-sm text-foreground line-clamp-3">
-            {aiSummary}
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm text-foreground">
+              {aiSummary}
+            </p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 text-xs text-muted-foreground hover:text-foreground p-0"
+              onClick={handleGenerateSummary}
+              disabled={isGenerating}
+            >
+              {isGenerating ? (
+                <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+              ) : (
+                <Sparkles className="h-3 w-3 mr-1" />
+              )}
+              {isGenerating ? 'Régénération...' : 'Régénérer le résumé'}
+            </Button>
+          </div>
         ) : description ? (
           <p className="text-sm text-muted-foreground line-clamp-2">
             {description}
