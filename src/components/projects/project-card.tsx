@@ -61,6 +61,7 @@ export function ProjectCard({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           repoName: name,
+          repoId: id,
           owner: username,
           description,
           language,

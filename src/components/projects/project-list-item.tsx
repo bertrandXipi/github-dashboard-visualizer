@@ -58,6 +58,7 @@ export function ProjectListItem({ repository, lastCommitMessage, onCardClick }: 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           repoName: repository.name,
+          repoId: repository.id,
           owner: username,
           description: repository.description,
           language: repository.language,

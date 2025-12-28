@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { spawn } from 'child_process'
+import { saveSummary } from '@/lib/supabase'
 
 const GITHUB_API = 'https://api.github.com'
 
@@ -73,7 +74,7 @@ async function fetchRawFile(owner: string, repo: string, path: string, token?: s
 
 export async function POST(request: NextRequest) {
   try {
-    const { repoName, owner, description, language, token } = await request.json()
+    const { repoName, owner, description, language, token, repoId } = await request.json()
     
     if (!repoName || !owner) {
       return NextResponse.json({ error: 'Missing repoName or owner' }, { status: 400 })
@@ -164,6 +165,12 @@ RÈGLES:
     const summary = await callGemini(prompt)
     
     console.log('Gemini response for', repoName, ':', summary.slice(0, 100))
+    
+    // Save to Supabase if repoId is provided
+    if (repoId) {
+      await saveSummary(repoId, repoName, owner, summary)
+      console.log('Summary saved to Supabase for', repoName)
+    }
     
     return NextResponse.json({ summary })
   } catch (error: any) {

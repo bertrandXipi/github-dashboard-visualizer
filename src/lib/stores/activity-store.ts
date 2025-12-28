@@ -32,6 +32,7 @@ import {
   generateWeeksActivity,
   calculateGlobalStats,
 } from '@/lib/utils/calculations'
+import { getAllSummaries } from '@/lib/supabase'
 
 interface ActivityState {
   // Data
@@ -89,6 +90,20 @@ export const useActivityStore = create<ActivityState>((set, get) => ({
       globalStats,
       lastSync: metadata.lastSync,
     })
+    
+    // Load summaries from Supabase in background
+    if (userProfile?.login) {
+      getAllSummaries(userProfile.login).then(summaries => {
+        const { repositories: currentRepos } = get()
+        const updatedRepos = currentRepos.map(repo => {
+          if (summaries[repo.id]) {
+            return { ...repo, aiSummary: summaries[repo.id] }
+          }
+          return repo
+        })
+        set({ repositories: updatedRepos })
+      }).catch(console.error)
+    }
   },
   
   syncWithGitHub: async (username: string, token?: string) => {
@@ -117,7 +132,19 @@ export const useActivityStore = create<ActivityState>((set, get) => ({
       })
       
       const repositories = await fetchRepositories(username, token)
-      set({ repositories })
+      
+      // Load summaries from Supabase
+      const summaries = await getAllSummaries(username)
+      
+      // Merge summaries with repositories
+      const reposWithSummaries = repositories.map(repo => {
+        if (summaries[repo.id]) {
+          return { ...repo, aiSummary: summaries[repo.id] }
+        }
+        return repo
+      })
+      
+      set({ repositories: reposWithSummaries })
       
       // Stage 3: Fetch commits
       set({
@@ -177,7 +204,7 @@ export const useActivityStore = create<ActivityState>((set, get) => ({
       
       saveActivityCache({
         userProfile,
-        repositories,
+        repositories: reposWithSummaries,
         commits,
         weeksActivity,
         globalStats,
