@@ -8,7 +8,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
 
 ## Tasks
 
-- [-] 1. Project Setup and Configuration
+- [x] 1. Project Setup and Configuration
   - Initialize Next.js 14 project with TypeScript and App Router
   - Configure Tailwind CSS and install shadcn/ui
   - Set up project structure (app/, components/, lib/, hooks/, types/)
@@ -18,8 +18,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
   - _Requirements: Foundation for all features_
 
 
-- [ ] 2. Type Definitions and Data Models
-  - [ ] 2.1 Create core TypeScript types
+- [x] 2. Type Definitions and Data Models
+  - [x] 2.1 Create core TypeScript types
     - Define UserProfile, Repository, Commit, WeekActivity interfaces
     - Define ActivityCache and CacheMetadata types
     - Define RepositoryStatus and other enums
