@@ -19,6 +19,9 @@ mkdir -p "${RESOURCES_DIR}"
 cat > "${MACOS_DIR}/launcher" << 'LAUNCHER'
 #!/bin/bash
 
+# Add Homebrew to PATH (required for npm)
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
 PROJECT_DIR="/Users/bertrand/Sites/github-dashboard-visualizer"
 LOG_FILE="/tmp/github-dashboard.log"
 PID_FILE="/tmp/github-dashboard.pid"
@@ -52,23 +55,26 @@ if lsof -i :$PORT > /dev/null 2>&1; then
     PORT=3335
 fi
 
-echo "Starting GitHub Dashboard on port $PORT..."
-npm run start -- -p $PORT > "$LOG_FILE" 2>&1 &
+# Use dev mode so changes are always reflected
+echo "Starting GitHub Dashboard (dev mode) on port $PORT..."
+npm run dev -- -p $PORT > "$LOG_FILE" 2>&1 &
 echo $! > "$PID_FILE"
 
-# Wait for server to be ready
-echo "Waiting for server..."
-for i in {1..30}; do
-    if curl -s "http://localhost:$PORT" > /dev/null 2>&1; then
-        echo "Server ready!"
-        open "http://localhost:$PORT"
-        exit 0
-    fi
-    sleep 1
-done
+# Wait for server to be ready (in background to stop bouncing)
+(
+    for i in {1..30}; do
+        if curl -s "http://localhost:$PORT" > /dev/null 2>&1; then
+            open "http://localhost:$PORT"
+            exit 0
+        fi
+        sleep 1
+    done
+    # If failed, open log
+    open "$LOG_FILE"
+) &
 
-echo "Server failed to start. Check $LOG_FILE"
-open "$LOG_FILE"
+# Exit immediately to stop dock bouncing
+exit 0
 LAUNCHER
 
 chmod +x "${MACOS_DIR}/launcher"

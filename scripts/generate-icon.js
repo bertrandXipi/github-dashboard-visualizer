@@ -13,8 +13,8 @@ ctx.beginPath();
 ctx.roundRect(0, 0, size, size, 200);
 ctx.fill();
 
-// Black border
-ctx.strokeStyle = '#000000';
+// Green border (GitHub style)
+ctx.strokeStyle = '#40c463';
 ctx.lineWidth = 30;
 ctx.beginPath();
 ctx.roundRect(40, 40, size - 80, size - 80, 180);
@@ -26,27 +26,31 @@ const gridStartY = 280;
 const cellSize = 80;
 const gap = 20;
 
-// Pattern: 1 = filled, 0 = outline
+// GitHub contribution colors (from light to dark green)
+const greenColors = ['#9be9a8', '#40c463', '#30a14e', '#216e39'];
+
+// Pattern: 0-3 = intensity level (0=lightest, 3=darkest), -1 = empty/outline
 const pattern = [
-  [0, 1, 0, 1, 1, 0, 1],
-  [1, 0, 1, 0, 1, 1, 0],
-  [0, 1, 1, 1, 0, 1, 1],
-  [1, 1, 0, 1, 1, 0, 1],
+  [-1, 2, 0, 3, 1, -1, 2],
+  [1, -1, 3, 0, 2, 1, -1],
+  [-1, 1, 2, 3, -1, 2, 1],
+  [3, 2, -1, 1, 3, -1, 2],
 ];
 
 for (let row = 0; row < pattern.length; row++) {
   for (let col = 0; col < pattern[row].length; col++) {
     const x = gridStartX + col * (cellSize + gap);
     const y = gridStartY + row * (cellSize + gap);
+    const intensity = pattern[row][col];
     
     ctx.beginPath();
     ctx.roundRect(x, y, cellSize, cellSize, 12);
     
-    if (pattern[row][col] === 1) {
-      ctx.fillStyle = '#000000';
+    if (intensity >= 0) {
+      ctx.fillStyle = greenColors[intensity];
       ctx.fill();
     } else {
-      ctx.strokeStyle = '#000000';
+      ctx.strokeStyle = '#9be9a8';
       ctx.lineWidth = 6;
       ctx.stroke();
     }
@@ -92,8 +96,8 @@ for (const { name, size: s } of sizes) {
   resizedCtx.roundRect(0, 0, s, s, 200 * scale);
   resizedCtx.fill();
   
-  // Black border
-  resizedCtx.strokeStyle = '#000000';
+  // Green border (GitHub style)
+  resizedCtx.strokeStyle = '#40c463';
   resizedCtx.lineWidth = 30 * scale;
   resizedCtx.beginPath();
   resizedCtx.roundRect(40 * scale, 40 * scale, s - 80 * scale, s - 80 * scale, 180 * scale);
@@ -105,15 +109,16 @@ for (const { name, size: s } of sizes) {
       const x = (gridStartX + col * (cellSize + gap)) * scale;
       const y = (gridStartY + row * (cellSize + gap)) * scale;
       const cs = cellSize * scale;
+      const intensity = pattern[row][col];
       
       resizedCtx.beginPath();
       resizedCtx.roundRect(x, y, cs, cs, 12 * scale);
       
-      if (pattern[row][col] === 1) {
-        resizedCtx.fillStyle = '#000000';
+      if (intensity >= 0) {
+        resizedCtx.fillStyle = greenColors[intensity];
         resizedCtx.fill();
       } else {
-        resizedCtx.strokeStyle = '#000000';
+        resizedCtx.strokeStyle = '#9be9a8';
         resizedCtx.lineWidth = 6 * scale;
         resizedCtx.stroke();
       }

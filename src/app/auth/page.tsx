@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Github, Eye, EyeOff, ExternalLink, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -14,11 +14,48 @@ export default function AuthPage() {
   const router = useRouter()
   const { setCredentials } = useAuthStore()
   
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('bertrandXipi')
   const [token, setToken] = useState('')
+  const [autoLoading, setAutoLoading] = useState(true)
+  
+  // Auto-login from config file
+  useEffect(() => {
+    const autoLogin = async () => {
+      try {
+        const res = await fetch('/api/config')
+        if (res.ok) {
+          const config = await res.json()
+          if (config.username && config.token && config.token !== 'METS_TON_TOKEN_ICI') {
+            // Auto-login with config
+            await setCredentials(config.username, config.token)
+            router.push('/')
+            return
+          }
+          if (config.username) {
+            setUsername(config.username)
+          }
+          if (config.token && config.token !== 'METS_TON_TOKEN_ICI') {
+            setToken(config.token)
+          }
+        }
+      } catch (e) {
+        // Config not found, continue with manual login
+      }
+      setAutoLoading(false)
+    }
+    autoLogin()
+  }, [setCredentials, router])
   const [showToken, setShowToken] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  if (autoLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </main>
+    )
+  }
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

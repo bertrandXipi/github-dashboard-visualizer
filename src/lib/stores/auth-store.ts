@@ -92,6 +92,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           isLoading: false,
         })
       } else {
+        // Try to load from config file
+        try {
+          const res = await fetch('/api/config')
+          if (res.ok) {
+            const config = await res.json()
+            if (config.username && config.token && config.token !== 'METS_TON_TOKEN_ICI') {
+              // Auto-login with config file
+              await get().setCredentials(config.username, config.token)
+              return
+            }
+          }
+        } catch {
+          // Config not available, continue
+        }
+        
         set({
           isAuthenticated: false,
           isLoading: false,

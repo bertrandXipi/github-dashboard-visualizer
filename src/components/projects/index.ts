@@ -1,4 +1,5 @@
 export { ProjectCard } from './project-card'
+export { ProjectListItem } from './project-list-item'
 export { ProjectFilters } from './project-filters'
 export { ProjectModal } from './project-modal'
 export { CloneModal } from './clone-modal'
