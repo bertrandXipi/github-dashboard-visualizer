@@ -206,8 +206,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - **Property: Project card shows all organization data**
     - Tester que tous les éléments sont affichés
 
-- [ ] 11. Intégration dans ProjectModal
-  - [ ] 11.1 Mettre à jour ProjectModal
+- [x] 11. Intégration dans ProjectModal
+  - [x] 11.1 Mettre à jour ProjectModal
     - Modifier `src/components/projects/project-modal.tsx`
     - Ajouter onglet "Organisation" ou section dédiée
     - Intégrer TagSelector

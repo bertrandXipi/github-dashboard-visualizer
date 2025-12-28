@@ -10,7 +10,8 @@ import {
   BarChart3,
   Clock,
   Sparkles,
-  FileText
+  FileText,
+  Settings2
 } from 'lucide-react'
 import { format, startOfWeek, endOfWeek, isWithinInterval, subMonths } from 'date-fns'
 import { fr } from 'date-fns/locale'
@@ -25,8 +26,17 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 import { ActivityBarChart, HeatmapCalendar } from '@/components/charts'
-import { useActivityStore } from '@/lib/stores'
+import { 
+  TagSelector, 
+  TagBadge, 
+  StatusSelector, 
+  CloneStatus, 
+  NoteEditor, 
+  TodoList 
+} from '@/components/organization'
+import { useActivityStore, useOrganizationStore } from '@/lib/stores'
 import { formatDate } from '@/lib/utils/date-helpers'
 import { formatCommitMessage, formatNumber } from '@/lib/utils/formatters'
 import type { Repository, Commit } from '@/types'
@@ -39,6 +49,7 @@ interface ProjectModalProps {
 
 export function ProjectModal({ repository, open, onOpenChange }: ProjectModalProps) {
   const { commits } = useActivityStore()
+  const { tags, projectOrganizations } = useOrganizationStore()
   const [activeTab, setActiveTab] = useState('summary')
   
   const repoCommits = useMemo(() => {
@@ -47,6 +58,10 @@ export function ProjectModal({ repository, open, onOpenChange }: ProjectModalPro
       .filter(c => c.repoName === repository.name)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }, [commits, repository])
+  
+  // Organization data
+  const org = repository ? projectOrganizations[repository.id] : undefined
+  const projectTags = tags.filter(t => org?.tagIds.includes(t.id))
   
   // Group commits by week
   const commitsByWeek = useMemo(() => {
@@ -143,11 +158,21 @@ export function ProjectModal({ repository, open, onOpenChange }: ProjectModalPro
               {formatNumber(repository.forks)}
             </div>
           </div>
+          
+          {/* Tags display */}
+          {projectTags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {projectTags.map(tag => (
+                <TagBadge key={tag.id} tag={tag} size="sm" />
+              ))}
+            </div>
+          )}
         </DialogHeader>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 overflow-hidden flex flex-col">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="summary">Résumé</TabsTrigger>
+            <TabsTrigger value="organization">Organisation</TabsTrigger>
             <TabsTrigger value="activity">Activité</TabsTrigger>
             <TabsTrigger value="stats">Stats</TabsTrigger>
             <TabsTrigger value="timeline">Timeline</TabsTrigger>
@@ -227,6 +252,37 @@ export function ProjectModal({ repository, open, onOpenChange }: ProjectModalPro
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+            </ScrollArea>
+          </TabsContent>
+          
+          <TabsContent value="organization" className="flex-1 overflow-hidden">
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-6 pr-4">
+                {/* Quick actions */}
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Settings2 className="h-4 w-4 text-muted-foreground" />
+                      <h3 className="text-sm font-medium">Actions rapides</h3>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <TagSelector projectId={repository.id} />
+                      <StatusSelector projectId={repository.id} />
+                      <CloneStatus projectId={repository.id} />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Separator />
+                
+                {/* Notes */}
+                <NoteEditor projectId={repository.id} />
+                
+                <Separator />
+                
+                {/* TODOs */}
+                <TodoList projectId={repository.id} />
               </div>
             </ScrollArea>
           </TabsContent>
