@@ -10,7 +10,6 @@ import { getStatusColor, getStatusLabel } from '@/lib/utils/calculations'
 import { formatDate } from '@/lib/utils/date-helpers'
 import { formatCommitMessage, getLanguageColor, formatNumber } from '@/lib/utils/formatters'
 import { useActivityStore, useAuthStore } from '@/lib/stores'
-import { getReadme } from '@/lib/github/api'
 import { toast } from 'sonner'
 import type { Repository } from '@/types'
 
@@ -51,9 +50,7 @@ export function ProjectCard({
     
     setIsGenerating(true)
     try {
-      // Get README
       const token = await getDecryptedToken()
-      const readme = await getReadme(username, name, token || undefined)
       
       // Call API to generate summary
       const response = await fetch('/api/summarize', {
@@ -62,9 +59,9 @@ export function ProjectCard({
         body: JSON.stringify({
           repoName: name,
           owner: username,
-          readme,
           description,
           language,
+          token: token || undefined,
         }),
       })
       

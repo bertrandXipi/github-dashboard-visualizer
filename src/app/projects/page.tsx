@@ -9,7 +9,6 @@ import { LoadingScreen } from '@/components/loading-screen'
 import { Button } from '@/components/ui/button'
 import { useAuthStore, useActivityStore, useSettingsStore } from '@/lib/stores'
 import { getRepoActivityData } from '@/lib/utils/calculations'
-import { getReadme } from '@/lib/github/api'
 import { toast } from 'sonner'
 import type { RepositoryFilters, Repository } from '@/types'
 
@@ -88,17 +87,15 @@ export default function ProjectsPage() {
       setGenerationProgress({ current: i + 1, total: toGenerate.length })
       
       try {
-        const readme = await getReadme(username, repo.name, token || undefined)
-        
         const response = await fetch('/api/summarize', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             repoName: repo.name,
             owner: username,
-            readme,
             description: repo.description,
             language: repo.language,
+            token: token || undefined,
           }),
         })
         
@@ -112,7 +109,7 @@ export default function ProjectsPage() {
       }
       
       // Small delay to avoid rate limiting
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 1000))
     }
     
     setIsGeneratingAll(false)
