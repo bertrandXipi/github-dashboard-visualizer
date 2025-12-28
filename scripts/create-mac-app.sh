@@ -20,22 +20,44 @@ cat > "${MACOS_DIR}/launcher" << 'LAUNCHER'
 #!/bin/bash
 
 PROJECT_DIR="/Users/bertrand/Sites/github-dashboard-visualizer"
-PORT=3333
 LOG_FILE="/tmp/github-dashboard.log"
 
 cd "$PROJECT_DIR"
 
-# Check if already running
+# Check common ports for running instance
+for PORT in 3000 3001 3333 3334 3335; do
+    if curl -s "http://localhost:$PORT" > /dev/null 2>&1; then
+        echo "Found running instance on port $PORT"
+        open "http://localhost:$PORT"
+        exit 0
+    fi
+done
+
+# No running instance found, start on port 3333
+PORT=3333
+
+# Make sure port 3333 is free
 if lsof -i :$PORT > /dev/null 2>&1; then
-    echo "Server already running on port $PORT"
-else
-    echo "Starting server..."
-    npm run start -- -p $PORT > "$LOG_FILE" 2>&1 &
-    sleep 3
+    # Port busy but not responding, try next
+    PORT=3334
 fi
 
-# Open in browser
-open "http://localhost:$PORT"
+echo "Starting server on port $PORT..."
+npm run start -- -p $PORT > "$LOG_FILE" 2>&1 &
+
+# Wait for server to be ready
+echo "Waiting for server..."
+for i in {1..30}; do
+    if curl -s "http://localhost:$PORT" > /dev/null 2>&1; then
+        echo "Server ready!"
+        open "http://localhost:$PORT"
+        exit 0
+    fi
+    sleep 1
+done
+
+echo "Server failed to start. Check $LOG_FILE"
+open "$LOG_FILE"
 LAUNCHER
 
 chmod +x "${MACOS_DIR}/launcher"
