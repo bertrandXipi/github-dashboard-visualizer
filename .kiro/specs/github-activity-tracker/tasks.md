@@ -240,7 +240,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test scrolling behavior
 
 - [ ] 13. Dashboard - Statistics Panel
-  - [ ] 13.1 Create StatsPanel component
+  - [x] 13.1 Create StatsPanel component
     - Display total projects count
     - Display total commits count
     - Display most active project
@@ -260,7 +260,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
   - Ask the user if questions arise
 
 - [-] 15. Projects Page - Repository List
-  - [ ] 15.1 Create ProjectCard component
+  - [x] 15.1 Create ProjectCard component
     - Display repository name with GitHub link
     - Display status badge with color
     - Display language with icon
@@ -272,14 +272,14 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Add "Voir historique complet" button
     - _Requirements: 4.9_
   
-  - [ ] 15.2 Create ProjectFilters component
+  - [x] 15.2 Create ProjectFilters component
     - Add search bar for filtering by name
     - Add status dropdown filter
     - Add language dropdown filter
     - Add sort dropdown (last activity, name, stars, commits)
     - _Requirements: 4.6, 4.7, 4.8_
   
-  - [ ] 15.3 Create projects page
+  - [x] 15.3 Create projects page
     - Render ProjectFilters at top
     - Render grid of ProjectCard components
     - Implement filtering logic
@@ -305,8 +305,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - **Validates: Requirements 11.6**
 
 
-- [ ] 16. Projects Page - Repository Details Modal
-  - [ ] 16.1 Create ProjectModal component
+- [x] 16. Projects Page - Repository Details Modal
+  - [x] 16.1 Create ProjectModal component
     - Create modal with tabs: Activité, Statistiques, Timeline
     - Implement Activité tab with detailed graph and commit list
     - Implement Statistiques tab with totals and distributions
@@ -315,7 +315,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Add "Archiver" button
     - _Requirements: 5.1, 5.2, 5.6, 5.7_
   
-  - [ ] 16.2 Implement commit grouping by week
+  - [x] 16.2 Implement commit grouping by week
     - Group commits by week in reverse chronological order
     - Display each commit with date, time, message, files
     - _Requirements: 5.3, 5.4_
@@ -446,15 +446,15 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
   - Test error handling scenarios
   - Ask the user if questions arise
 
-- [ ] 21. Report Generation
-  - [ ] 21.1 Implement report generation functions
+- [x] 21. Report Generation
+  - [x] 21.1 Implement report generation functions
     - Implement generateWeeklyReport() to create Markdown
     - Implement generateMonthlyReport() with aggregation
     - Include all required sections: overview, projects, highlights, daily breakdown
     - Format as valid Markdown with proper headers and lists
     - _Requirements: 8.1, 8.2, 8.3_
   
-  - [ ] 21.2 Create report UI
+  - [x] 21.2 Create report UI
     - Add "Générer rapport" buttons to dashboard
     - Create date range picker for custom reports
     - Add "Copier en Markdown" button
@@ -476,8 +476,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test download creates file
     - Test custom date range selection
 
-- [ ] 22. Settings Page
-  - [ ] 22.1 Create settings page UI
+- [x] 22. Settings Page
+  - [x] 22.1 Create settings page UI
     - Create "Connexion GitHub" section with account info
     - Create "Préférences d'affichage" section
     - Create "Export" section
@@ -486,7 +486,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Style with shadcn/ui components
     - _Requirements: 9.1-9.8_
   
-  - [ ] 22.2 Implement settings functionality
+  - [x] 22.2 Implement settings functionality
     - Implement account switching
     - Implement token renewal
     - Implement date format selection
@@ -516,14 +516,14 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test cache clear removes all data
     - Test export generates valid JSON
 
-- [ ] 23. Offline Mode
-  - [ ] 23.1 Create useOfflineMode hook
+- [x] 23. Offline Mode
+  - [x] 23.1 Create useOfflineMode hook
     - Detect online/offline status
     - Listen to online/offline events
     - Return isOnline and isOffline states
     - _Requirements: 10.1_
   
-  - [ ] 23.2 Implement offline mode UI
+  - [x] 23.2 Implement offline mode UI
     - Display offline banner when offline
     - Disable refresh button when offline
     - Show cache date in banner
@@ -531,7 +531,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Show sync prompt when coming back online
     - _Requirements: 10.2, 10.3, 10.5, 10.6_
   
-  - [ ] 23.3 Ensure offline functionality
+  - [x] 23.3 Ensure offline functionality
     - Verify all navigation works with cached data
     - Prevent API calls when offline
     - Load all data from cache

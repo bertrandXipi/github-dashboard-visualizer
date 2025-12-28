@@ -3,11 +3,11 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardLayout } from '@/components/layout'
-import { ProjectCard, ProjectFilters } from '@/components/projects'
+import { ProjectCard, ProjectFilters, ProjectModal } from '@/components/projects'
 import { LoadingScreen } from '@/components/loading-screen'
 import { useAuthStore, useActivityStore, useSettingsStore } from '@/lib/stores'
 import { getRepoActivityData } from '@/lib/utils/calculations'
-import type { RepositoryFilters } from '@/types'
+import type { RepositoryFilters, Repository } from '@/types'
 
 const defaultFilters: RepositoryFilters = {
   search: '',
@@ -25,6 +25,8 @@ export default function ProjectsPage() {
   
   const [isInitialized, setIsInitialized] = useState(false)
   const [filters, setFilters] = useState<RepositoryFilters>(defaultFilters)
+  const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
   
   // Initialize
   useEffect(() => {
@@ -142,7 +144,8 @@ export default function ProjectsPage() {
                 activityData={getRepoActivityData(commits, repo.name, 30)}
                 lastCommitMessage={getLastCommitMessage(repo.name)}
                 onCardClick={() => {
-                  // TODO: Open modal
+                  setSelectedRepo(repo)
+                  setModalOpen(true)
                 }}
               />
             ))}
@@ -154,6 +157,12 @@ export default function ProjectsPage() {
             </p>
           </div>
         )}
+        
+        <ProjectModal
+          repository={selectedRepo}
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+        />
       </div>
     </DashboardLayout>
   )

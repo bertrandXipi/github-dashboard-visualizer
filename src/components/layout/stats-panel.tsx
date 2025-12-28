@@ -8,11 +8,12 @@ import {
   TrendingUp
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { HeatmapCalendar } from '@/components/charts'
 import { useActivityStore } from '@/lib/stores'
 import { formatNumber } from '@/lib/utils/formatters'
 
 export function StatsPanel() {
-  const { globalStats, repositories } = useActivityStore()
+  const { globalStats, repositories, commits } = useActivityStore()
   
   const stats = [
     {
@@ -73,6 +74,18 @@ export function StatsPanel() {
               </CardContent>
             </Card>
           ))}
+        </div>
+        
+        {/* Heatmap Calendar */}
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-muted-foreground mb-3">
+            Activité récente
+          </h3>
+          <Card className="bg-muted/50">
+            <CardContent className="p-3">
+              <HeatmapCalendar commits={commits} months={3} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </aside>
