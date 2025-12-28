@@ -55,3 +55,21 @@ export type {
   ProjectSummary,
   ReportHighlights 
 } from './report'
+
+// Organization types
+export type {
+  Tag,
+  ManualStatus,
+  TodoItem,
+  ProjectNote,
+  ProjectOrganization,
+  MachineInfo,
+  SyncQueueItem,
+  OrganizationData,
+} from './organization'
+export {
+  DEFAULT_TAGS,
+  MANUAL_STATUS_LABELS,
+  MANUAL_STATUS_COLORS,
+  ORGANIZATION_LIMITS,
+} from './organization'

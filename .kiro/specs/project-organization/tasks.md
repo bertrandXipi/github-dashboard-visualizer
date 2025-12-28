@@ -13,8 +13,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
   - Vérifier que le projet compile et que les tests passent
   - _Prérequis pour tout le développement_
 
-- [ ] 2. Types et Interfaces
-  - [ ] 2.1 Créer les types d'organisation
+- [x] 2. Types et Interfaces
+  - [x] 2.1 Créer les types d'organisation
     - Créer `src/types/organization.ts`
     - Définir Tag, TodoItem, ProjectNote, ProjectOrganization
     - Définir ManualStatus, MachineInfo, SyncQueueItem
