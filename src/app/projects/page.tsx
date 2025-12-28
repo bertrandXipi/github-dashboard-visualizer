@@ -9,6 +9,7 @@ import type { ExtendedFilters } from '@/components/projects/project-filters'
 import { LoadingScreen } from '@/components/loading-screen'
 import { Button } from '@/components/ui/button'
 import { useAuthStore, useActivityStore, useSettingsStore, useOrganizationStore } from '@/lib/stores'
+import { useProjectShortcuts } from '@/hooks'
 import { getRepoActivityData } from '@/lib/utils/calculations'
 import { 
   sortProjectsByOrganization, 
@@ -42,6 +43,8 @@ export default function ProjectsPage() {
     machineInfo,
     loadFromCache: loadOrganization,
     isInitialized: orgInitialized,
+    toggleFavorite,
+    togglePin,
   } = useOrganizationStore()
   
   const [isInitialized, setIsInitialized] = useState(false)
@@ -52,6 +55,29 @@ export default function ProjectsPage() {
   const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 })
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list')
   const [isRefreshing, setIsRefreshing] = useState(false)
+  
+  // Keyboard shortcuts for selected project
+  useProjectShortcuts({
+    projectId: selectedRepo?.id ?? null,
+    onToggleFavorite: (projectId) => {
+      toggleFavorite(projectId)
+      const org = projectOrganizations[projectId]
+      const isFavorite = !org?.isFavorite
+      toast.success(isFavorite ? 'Ajouté aux favoris' : 'Retiré des favoris')
+    },
+    onTogglePin: (projectId) => {
+      const success = togglePin(projectId)
+      if (success) {
+        const org = projectOrganizations[projectId]
+        const isPinned = !org?.isPinned
+        toast.success(isPinned ? 'Projet épinglé' : 'Projet désépinglé')
+      } else {
+        toast.error('Maximum 5 projets épinglés')
+      }
+      return success
+    },
+    enabled: modalOpen && selectedRepo !== null,
+  })
   
   // Handle refresh
   const handleRefresh = async () => {

@@ -318,8 +318,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Compteur de TODOs incomplets total
     - _Requirements: 8.7_
 
-- [ ] 19. Raccourcis Clavier
-  - [ ] 19.1 Implémenter les raccourcis
+- [x] 19. Raccourcis Clavier
+  - [x] 19.1 Implémenter les raccourcis
     - F pour toggle favori sur projet sélectionné
     - P pour toggle pin sur projet sélectionné
     - _Requirements: 8.6_
