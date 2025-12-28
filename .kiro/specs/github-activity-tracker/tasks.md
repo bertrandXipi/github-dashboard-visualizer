@@ -73,8 +73,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test getCacheSize returns accurate size
     - Test error handling for storage quota exceeded
 
-- [ ] 5. Calculation Utilities
-  - [ ] 5.1 Implement calculation functions
+- [x] 5. Calculation Utilities
+  - [x] 5.1 Implement calculation functions
     - Implement calculateRepoStatus() based on last commit date
     - Implement calculateStreak() from commit list
     - Implement aggregateWeekActivity() from commits
