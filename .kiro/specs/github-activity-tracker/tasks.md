@@ -29,7 +29,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - **Property: Type definitions should allow valid data structures**
     - **Validates: Requirements 2.1, 2.2, 2.3**
 
-- [ ] 3. Crypto Service for Token Security
+- [x] 3. Crypto Service for Token Security
   - [x] 3.1 Implement CryptoService class
     - Implement encryptToken() using Web Crypto API
     - Implement decryptToken() method
@@ -158,7 +158,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test error display for invalid token
     - Test redirect after successful auth
 
-- [-] 9. Initial Data Loading
+- [x] 9. Initial Data Loading
   - [x] 9.1 Create loading screen component
     - Display progress bar with stages
     - Show loading messages: "Récupération de tes repos...", etc.
@@ -239,7 +239,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test modal opens on card click
     - Test scrolling behavior
 
-- [ ] 13. Dashboard - Statistics Panel
+- [x] 13. Dashboard - Statistics Panel
   - [x] 13.1 Create StatsPanel component
     - Display total projects count
     - Display total commits count
@@ -253,13 +253,13 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - **Property 32: Dashboard Statistics Calculation**
     - **Validates: Requirements 3.5**
 
-- [ ] 14. Checkpoint - Core Dashboard Complete
+- [x] 14. Checkpoint - Core Dashboard Complete
   - Ensure all tests pass
   - Verify dashboard displays correctly with sample data
   - Test authentication flow end-to-end
   - Ask the user if questions arise
 
-- [-] 15. Projects Page - Repository List
+- [x] 15. Projects Page - Repository List
   - [x] 15.1 Create ProjectCard component
     - Display repository name with GitHub link
     - Display status badge with color
@@ -401,8 +401,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test result cards render correctly
     - Test GitHub links are correct
 
-- [ ] 19. Data Synchronization
-  - [ ] 19.1 Implement sync logic
+- [x] 19. Data Synchronization
+  - [x] 19.1 Implement sync logic
     - Check last sync date from cache
     - Fetch only commits since last sync
     - Update affected week activities
@@ -410,14 +410,14 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Update cache with new data
     - _Requirements: 7.4, 16.5_
   
-  - [ ] 19.2 Create useSync hook
+  - [x] 19.2 Create useSync hook
     - Implement sync() function
     - Track isSyncing state
     - Track lastSync timestamp
     - Handle errors during sync
     - _Requirements: 7.4, 7.7, 7.8_
   
-  - [ ] 19.3 Add sync UI elements
+  - [x] 19.3 Add sync UI elements
     - Add refresh button to header
     - Show loading animation during sync
     - Display success toast after sync
@@ -439,7 +439,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test sync error handling
     - Test notification badge appears
 
-- [ ] 20. Checkpoint - Core Features Complete
+- [x] 20. Checkpoint - Core Features Complete
   - Ensure all tests pass
   - Test full user flow: auth → dashboard → projects → search → sync
   - Verify all data displays correctly
@@ -547,8 +547,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test manual toggle works
     - Test sync prompt appears when back online
 
-- [ ] 24. Data Deletion and Privacy
-  - [ ] 24.1 Implement data deletion
+- [x] 24. Data Deletion and Privacy
+  - [x] 24.1 Implement data deletion
     - Add "Supprimer toutes mes données" button
     - Show confirmation dialog with warning
     - Clear all LocalStorage keys starting with "github-tracker-"
@@ -587,8 +587,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test username not found error
     - Test error boundary catches errors
 
-- [ ] 26. Performance Optimization
-  - [ ] 26.1 Implement performance optimizations
+- [x] 26. Performance Optimization
+  - [x] 26.1 Implement performance optimizations
     - Add React.memo to expensive components
     - Implement virtual scrolling for long lists (react-window)
     - Add code splitting for routes
@@ -596,7 +596,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Optimize images with Next.js Image
     - _Requirements: 11.1, 11.2, 11.3, 11.4_
   
-  - [ ] 26.2 Add loading states
+  - [x] 26.2 Add loading states
     - Implement skeleton screens for all pages
     - Add loading spinners for async operations
     - Show progress indicators where appropriate
@@ -607,15 +607,15 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test with large datasets (100 repos, 1000+ commits)
     - Check bundle size
 
-- [ ] 27. Accessibility and Responsive Design
-  - [ ] 27.1 Ensure accessibility
+- [x] 27. Accessibility and Responsive Design
+  - [x] 27.1 Ensure accessibility
     - Add proper ARIA labels
     - Ensure keyboard navigation works
     - Test with screen readers
     - Verify color contrast ratios
     - Add focus indicators
   
-  - [ ] 27.2 Test responsive design
+  - [x] 27.2 Test responsive design
     - Test on desktop (> 1024px)
     - Test on tablet (768-1024px)
     - Test on mobile (< 768px)
@@ -644,7 +644,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Add inline code comments
     - Create user guide (optional)
 
-- [ ] 29. Final Checkpoint - MVP Complete
+- [x] 29. Final Checkpoint - MVP Complete
   - Run full test suite (unit + property tests)
   - Verify all requirements are met
   - Test on multiple browsers (Chrome, Firefox, Safari)
