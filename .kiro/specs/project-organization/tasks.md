@@ -22,8 +22,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Exporter depuis `src/types/index.ts`
     - _Requirements: 1.1, 4.1, 5.1, 6.1, 10.1-10.3_
 
-- [ ] 3. Cache LocalStorage pour Organisation
-  - [ ] 3.1 Implémenter le cache d'organisation
+- [x] 3. Cache LocalStorage pour Organisation
+  - [x] 3.1 Implémenter le cache d'organisation
     - Créer `src/lib/storage/organization-cache.ts`
     - Implémenter getTags(), saveTags()
     - Implémenter getProjectOrganizations(), saveProjectOrganizations()
