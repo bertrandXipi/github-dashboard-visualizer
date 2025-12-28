@@ -1,3 +1,6 @@
 export { TagBadge } from './tag-badge'
 export { TagSelector } from './tag-selector'
 export { TagManager } from './tag-manager'
+export { NoteEditor } from './note-editor'
+export { TodoItem } from './todo-item'
+export { TodoList } from './todo-list'

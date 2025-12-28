@@ -145,22 +145,22 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Tester TagSelector permet la sélection
     - Tester TagManager permet CRUD
 
-- [ ] 8. Composants UI - Notes et TODOs
-  - [ ] 8.1 Créer le composant NoteEditor
+- [x] 8. Composants UI - Notes et TODOs
+  - [x] 8.1 Créer le composant NoteEditor
     - Créer `src/components/organization/note-editor.tsx`
     - Textarea avec support Markdown
     - Auto-save après 2s d'inactivité
     - Affichage de la date de modification
     - _Requirements: 3.1, 3.2, 3.3, 3.8_
   
-  - [ ] 8.2 Créer le composant TodoItem
+  - [x] 8.2 Créer le composant TodoItem
     - Créer `src/components/organization/todo-item.tsx`
     - Checkbox pour compléter
     - Bouton supprimer
     - Style strikethrough si complété
     - _Requirements: 4.3, 4.5, 4.8_
   
-  - [ ] 8.3 Créer le composant TodoList
+  - [x] 8.3 Créer le composant TodoList
     - Créer `src/components/organization/todo-list.tsx`
     - Liste des TODOs avec drag & drop (@dnd-kit)
     - Input pour ajouter un TODO
