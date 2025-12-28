@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "create-app": "bash scripts/create-mac-app.sh"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
