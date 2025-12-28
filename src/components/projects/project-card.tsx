@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { MiniActivityGraph } from '@/components/charts/mini-activity-graph'
+import { CloneModal } from './clone-modal'
 import { getStatusColor, getStatusLabel } from '@/lib/utils/calculations'
 import { formatDate } from '@/lib/utils/date-helpers'
 import { formatCommitMessage, getLanguageColor, formatNumber } from '@/lib/utils/formatters'
@@ -42,6 +43,7 @@ export function ProjectCard({
   
   const [isGenerating, setIsGenerating] = useState(false)
   const [isOpening, setIsOpening] = useState(false)
+  const [showCloneModal, setShowCloneModal] = useState(false)
   const { updateRepoSummary } = useActivityStore()
   const { username, getDecryptedToken } = useAuthStore()
   
@@ -96,13 +98,19 @@ export function ProjectCard({
       const data = await response.json()
       
       if (!response.ok) {
-        throw new Error(data.message || data.error)
+        if (response.status === 404) {
+          // Project not found locally, show clone modal
+          setShowCloneModal(true)
+        } else {
+          throw new Error(data.message || data.error)
+        }
+        return
       }
       
       toast.success('Ouverture dans Kiro...')
     } catch (error: any) {
       console.error('Error opening in Kiro:', error)
-      toast.error(error.message || 'Projet non trouvé localement')
+      toast.error(error.message || 'Erreur')
     } finally {
       setIsOpening(false)
     }
@@ -244,6 +252,14 @@ export function ProjectCard({
           </span>
         </div>
       </CardContent>
+      
+      {/* Clone Modal */}
+      <CloneModal
+        open={showCloneModal}
+        onOpenChange={setShowCloneModal}
+        projectName={name}
+        githubUrl={htmlUrl}
+      />
     </Card>
   )
 }
