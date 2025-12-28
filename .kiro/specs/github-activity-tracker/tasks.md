@@ -30,7 +30,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - **Validates: Requirements 2.1, 2.2, 2.3**
 
 - [ ] 3. Crypto Service for Token Security
-  - [ ] 3.1 Implement CryptoService class
+  - [x] 3.1 Implement CryptoService class
     - Implement encryptToken() using Web Crypto API
     - Implement decryptToken() method
     - Implement generateSalt() method
