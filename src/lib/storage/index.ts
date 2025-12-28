@@ -99,3 +99,12 @@ export {
   initializeDefaultTags,
   clearOrganizationData,
 } from './organization-cache'
+
+// Organization Migration exports
+export {
+  isMigrationNeeded,
+  getMigrationVersion,
+  runMigration,
+  resetOrganizationData,
+  getMigrationStatus,
+} from './organization-migration'

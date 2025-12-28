@@ -299,8 +299,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - **Property 22: Clone Status Per Machine**
     - **Validates: Requirements 6.1, 7.1, 7.2**
 
-- [ ] 17. Migration des Données
-  - [ ] 17.1 Implémenter la migration
+- [x] 17. Migration des Données
+  - [x] 17.1 Implémenter la migration
     - Créer `src/lib/storage/organization-migration.ts`
     - Détecter si migration nécessaire
     - Initialiser les tags par défaut
