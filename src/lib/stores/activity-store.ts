@@ -92,8 +92,8 @@ export const useActivityStore = create<ActivityState>((set, get) => ({
     })
     
     // Load summaries from Supabase in background
-    if (userProfile?.login) {
-      getAllSummaries(userProfile.login).then(summaries => {
+    if (userProfile?.username) {
+      getAllSummaries(userProfile.username).then(summaries => {
         const { repositories: currentRepos } = get()
         const updatedRepos = currentRepos.map(repo => {
           if (summaries[repo.id]) {
