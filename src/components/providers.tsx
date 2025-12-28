@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from '@/components/ui/sonner'
+import { ErrorBoundary } from '@/components/error-boundary'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +12,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <ErrorBoundary>
+        {children}
+      </ErrorBoundary>
       <Toaster />
     </ThemeProvider>
   )
