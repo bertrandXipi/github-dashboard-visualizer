@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardLayout } from '@/components/layout'
-import { TodayCard, WeekSummary, WeekTimeline } from '@/components/dashboard'
+import { TodayCard, WeekSummary, WeekTimeline, OrganizationWidgets } from '@/components/dashboard'
 import { LoadingScreen } from '@/components/loading-screen'
-import { useAuthStore, useActivityStore, useSettingsStore } from '@/lib/stores'
+import { useAuthStore, useActivityStore, useSettingsStore, useOrganizationStore } from '@/lib/stores'
 import { toast } from 'sonner'
 
 export default function DashboardPage() {
@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const { username, isAuthenticated, isLoading: authLoading, loadFromCache: loadAuth, getDecryptedToken } = useAuthStore()
   const { loading, loadFromCache: loadActivity, syncWithGitHub } = useActivityStore()
   const { loadFromCache: loadSettings } = useSettingsStore()
+  const { loadFromCache: loadOrganization } = useOrganizationStore()
   const [isInitialized, setIsInitialized] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
   
@@ -22,10 +23,11 @@ export default function DashboardPage() {
       await loadAuth()
       loadSettings()
       loadActivity()
+      loadOrganization()
       setIsInitialized(true)
     }
     init()
-  }, [loadAuth, loadSettings, loadActivity])
+  }, [loadAuth, loadSettings, loadActivity, loadOrganization])
   
   // Redirect to auth if not authenticated
   useEffect(() => {
@@ -89,6 +91,9 @@ export default function DashboardPage() {
           <TodayCard />
           <WeekSummary />
         </div>
+        
+        {/* Organization Widgets */}
+        <OrganizationWidgets />
         
         {/* Week Timeline */}
         <WeekTimeline />

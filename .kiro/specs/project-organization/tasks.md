@@ -312,8 +312,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - **Property 24: Migration Data Preservation**
     - **Validates: Requirements 9.1, 9.2**
 
-- [ ] 18. Dashboard Updates
-  - [ ] 18.1 Ajouter les widgets d'organisation au dashboard
+- [x] 18. Dashboard Updates
+  - [x] 18.1 Ajouter les widgets d'organisation au dashboard
     - Section "Projets épinglés" avec les 5 projets max
     - Compteur de TODOs incomplets total
     - _Requirements: 8.7_
