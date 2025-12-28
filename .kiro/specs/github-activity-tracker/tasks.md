@@ -134,15 +134,15 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Implement loadFromCache() to restore settings
     - _Requirements: 9.3, 9.4, 9.5_
 
-- [ ] 8. Authentication Page
-  - [ ] 8.1 Create auth page UI
+- [x] 8. Authentication Page
+  - [x] 8.1 Create auth page UI
     - Create login form with username and token fields
     - Add explanation text about token usage
     - Add link to GitHub token creation docs
     - Style with shadcn/ui components
     - _Requirements: 1.1, 1.2, 1.6_
   
-  - [ ] 8.2 Implement authentication logic
+  - [x] 8.2 Implement authentication logic
     - Handle form submission
     - Validate username format
     - Call GitHubAPI.getUserProfile()
@@ -158,14 +158,14 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test error display for invalid token
     - Test redirect after successful auth
 
-- [ ] 9. Initial Data Loading
-  - [ ] 9.1 Create loading screen component
+- [-] 9. Initial Data Loading
+  - [x] 9.1 Create loading screen component
     - Display progress bar with stages
     - Show loading messages: "Récupération de tes repos...", etc.
     - Animate progress from 0% to 100%
     - _Requirements: 2.1_
   
-  - [ ] 9.2 Implement data fetching orchestration
+  - [x] 9.2 Implement data fetching orchestration
     - Fetch user profile (20% progress)
     - Fetch all repositories (40% progress)
     - Fetch commits for last 6 months (60% progress)
@@ -183,8 +183,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test rate limit error handling
     - Test cache save after loading
 
-- [ ] 10. Dashboard Layout and Navigation
-  - [ ] 10.1 Create main layout with sidebars
+- [x] 10. Dashboard Layout and Navigation
+  - [x] 10.1 Create main layout with sidebars
     - Create Sidebar component with navigation links
     - Create Header component with user profile
     - Create StatsPanel component for right sidebar
@@ -196,15 +196,15 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test tablet layout (768-1024px)
     - Test mobile layout (< 768px)
 
-- [ ] 11. Dashboard - Today and This Week Sections
-  - [ ] 11.1 Create TodayCard component
+- [x] 11. Dashboard - Today and This Week Sections
+  - [x] 11.1 Create TodayCard component
     - Display today's commit count
     - Display active projects list
     - Display last commit time and message
     - Add "Voir détails du jour" button
     - _Requirements: 3.1_
   
-  - [ ] 11.2 Create WeekSummary component
+  - [x] 11.2 Create WeekSummary component
     - Display total commits for current week
     - Create ActivityBarChart for daily commits
     - Display top 3 most active projects
@@ -215,8 +215,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Test WeekSummary displays correct data
     - Test ActivityBarChart renders with data
 
-- [ ] 12. Dashboard - Week Timeline
-  - [ ] 12.1 Create WeekCard component
+- [x] 12. Dashboard - Week Timeline
+  - [x] 12.1 Create WeekCard component
     - Display week date range
     - Display mini activity graph (7 bars)
     - Display total commits badge
@@ -224,7 +224,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - Add "Voir détails" button
     - _Requirements: 3.3, 3.4_
   
-  - [ ] 12.2 Create WeekTimeline component
+  - [x] 12.2 Create WeekTimeline component
     - Render last 12 WeekCard components
     - Implement scrollable container
     - Handle click to open modal with details
