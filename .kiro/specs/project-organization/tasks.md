@@ -71,8 +71,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - **Property 13: TODO Sorting Order**
     - **Validates: Requirements 4.8**
 
-- [ ] 5. Store Zustand pour Organisation
-  - [ ] 5.1 Créer le store d'organisation
+- [x] 5. Store Zustand pour Organisation
+  - [x] 5.1 Créer le store d'organisation
     - Créer `src/lib/stores/organization-store.ts`
     - Implémenter l'état initial et loadFromCache()
     - Implémenter createTag(), updateTag(), deleteTag()
