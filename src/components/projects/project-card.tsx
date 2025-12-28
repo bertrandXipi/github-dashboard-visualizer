@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink, GitCommit, Star, GitFork, Sparkles, Loader2 } from 'lucide-react'
+import { ExternalLink, GitCommit, Star, GitFork, Sparkles, Loader2, Play, Square } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -41,6 +41,8 @@ export function ProjectCard({
   } = repository
   
   const [isGenerating, setIsGenerating] = useState(false)
+  const [isLaunching, setIsLaunching] = useState(false)
+  const [runningUrl, setRunningUrl] = useState<string | null>(null)
   const { updateRepoSummary } = useActivityStore()
   const { username, getDecryptedToken } = useAuthStore()
   
@@ -77,6 +79,35 @@ export function ProjectCard({
       toast.error('Erreur lors de la génération du résumé')
     } finally {
       setIsGenerating(false)
+    }
+  }
+  
+  const handleLaunchProject = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (isLaunching) return
+    
+    setIsLaunching(true)
+    try {
+      const response = await fetch('/api/launch-project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName: name }),
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.message || data.error)
+      }
+      
+      setRunningUrl(data.url)
+      window.open(data.url, '_blank')
+      toast.success(`Projet lancé sur ${data.url}`)
+    } catch (error: any) {
+      console.error('Error launching project:', error)
+      toast.error(error.message || 'Erreur lors du lancement')
+    } finally {
+      setIsLaunching(false)
     }
   }
   
@@ -119,6 +150,37 @@ export function ProjectCard({
           >
             <ExternalLink className="h-4 w-4" />
           </Button>
+        </div>
+        
+        {/* Launch project button */}
+        <div className="flex gap-2">
+          <Button
+            variant={runningUrl ? "default" : "outline"}
+            size="sm"
+            className="flex-1 text-xs"
+            onClick={handleLaunchProject}
+            disabled={isLaunching}
+          >
+            {isLaunching ? (
+              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+            ) : (
+              <Play className="h-3 w-3 mr-1" />
+            )}
+            {isLaunching ? 'Lancement...' : runningUrl ? 'Ouvrir' : 'Lancer le projet'}
+          </Button>
+          {runningUrl && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs px-2"
+              onClick={(e) => {
+                e.stopPropagation()
+                window.open(runningUrl, '_blank')
+              }}
+            >
+              <ExternalLink className="h-3 w-3" />
+            </Button>
+          )}
         </div>
         
         {/* AI Summary or Description */}
