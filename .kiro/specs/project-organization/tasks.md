@@ -324,7 +324,7 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - P pour toggle pin sur projet sélectionné
     - _Requirements: 8.6_
 
-- [ ] 20. Checkpoint - Feature Complete
+- [x] 20. Checkpoint - Feature Complete
   - Vérifier que tous les tests passent (unit + property)
   - Tester le flow complet : tags → favoris → notes → TODOs → sync
   - Tester le mode offline
@@ -332,8 +332,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
   - Vérifier les performances
   - Demander à l'utilisateur pour review finale
 
-- [ ] 21. Merge et Cleanup
-  - [ ] 21.1 Finaliser la branche
+- [-] 21. Merge et Cleanup
+  - [-] 21.1 Finaliser la branche
     - Résoudre les conflits éventuels avec main
     - Vérifier que tous les tests passent
     - Créer la Pull Request
