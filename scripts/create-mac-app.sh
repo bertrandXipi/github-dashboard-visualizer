@@ -21,29 +21,40 @@ cat > "${MACOS_DIR}/launcher" << 'LAUNCHER'
 
 PROJECT_DIR="/Users/bertrand/Sites/github-dashboard-visualizer"
 LOG_FILE="/tmp/github-dashboard.log"
+PID_FILE="/tmp/github-dashboard.pid"
+PORT=3333
 
 cd "$PROJECT_DIR"
 
-# Check common ports for running instance
-for PORT in 3000 3001 3333 3334 3335; do
-    if curl -s "http://localhost:$PORT" > /dev/null 2>&1; then
-        echo "Found running instance on port $PORT"
-        open "http://localhost:$PORT"
-        exit 0
+# Check if our app is already running (check PID file)
+if [ -f "$PID_FILE" ]; then
+    OLD_PID=$(cat "$PID_FILE")
+    if ps -p "$OLD_PID" > /dev/null 2>&1; then
+        # Process exists, check if it's responding
+        if curl -s "http://localhost:$PORT" > /dev/null 2>&1; then
+            echo "App already running on port $PORT"
+            open "http://localhost:$PORT"
+            exit 0
+        fi
     fi
-done
+    # PID file exists but process is dead, clean up
+    rm -f "$PID_FILE"
+fi
 
-# No running instance found, start on port 3333
-PORT=3333
-
-# Make sure port 3333 is free
+# Make sure port is free
 if lsof -i :$PORT > /dev/null 2>&1; then
-    # Port busy but not responding, try next
+    echo "Port $PORT is busy by another app, trying 3334..."
     PORT=3334
 fi
 
-echo "Starting server on port $PORT..."
+if lsof -i :$PORT > /dev/null 2>&1; then
+    echo "Port $PORT also busy, trying 3335..."
+    PORT=3335
+fi
+
+echo "Starting GitHub Dashboard on port $PORT..."
 npm run start -- -p $PORT > "$LOG_FILE" 2>&1 &
+echo $! > "$PID_FILE"
 
 # Wait for server to be ready
 echo "Waiting for server..."
