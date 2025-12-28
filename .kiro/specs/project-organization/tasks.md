@@ -190,8 +190,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - Tester StatusSelector change le statut
     - Tester CloneStatus toggle
 
-- [ ] 10. Intégration dans ProjectCard
-  - [ ] 10.1 Mettre à jour ProjectCard
+- [x] 10. Intégration dans ProjectCard
+  - [x] 10.1 Mettre à jour ProjectCard
     - Modifier `src/components/projects/project-card.tsx`
     - Ajouter les TagBadges
     - Ajouter icône étoile (favori) et épingle (pin)
