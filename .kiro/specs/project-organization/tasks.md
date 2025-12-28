@@ -39,8 +39,8 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - **Property 11: TODO Data Round-Trip**
     - **Validates: Requirements 1.1, 3.1, 4.1**
 
-- [ ] 4. Utilitaires d'Organisation
-  - [ ] 4.1 Implémenter les fonctions utilitaires
+- [x] 4. Utilitaires d'Organisation
+  - [x] 4.1 Implémenter les fonctions utilitaires
     - Créer `src/lib/utils/organization.ts`
     - Implémenter sortProjectsByOrganization()
     - Implémenter filterProjectsByTags()

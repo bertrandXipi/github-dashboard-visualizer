@@ -60,3 +60,26 @@ export {
   downloadReport,
   copyReportToClipboard,
 } from './reports'
+
+// Organization utilities
+export {
+  sortProjectsByOrganization,
+  filterProjectsByTags,
+  filterProjectsByStatus,
+  filterProjectsByCloneStatus,
+  filterProjectsByFavorite,
+  sortTodos,
+  getEffectiveStatus,
+  validateTagName,
+  validateTodoDescription,
+  canPinProject,
+  canAddTag,
+  canAddTodoToProject,
+  canAddTodoGlobally,
+  generateMachineId,
+  getIncompleteTodoCount,
+  getTotalIncompleteTodoCount,
+  getProjectTodos,
+  getPinnedProjects,
+  createEmptyProjectOrganization,
+} from './organization'
