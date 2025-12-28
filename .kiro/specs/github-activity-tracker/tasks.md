@@ -259,7 +259,7 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
   - Test authentication flow end-to-end
   - Ask the user if questions arise
 
-- [ ] 15. Projects Page - Repository List
+- [-] 15. Projects Page - Repository List
   - [ ] 15.1 Create ProjectCard component
     - Display repository name with GitHub link
     - Display status badge with color
