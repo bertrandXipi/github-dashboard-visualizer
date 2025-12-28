@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink, GitCommit, Star, GitFork, Sparkles, Loader2, Play, Square } from 'lucide-react'
+import { ExternalLink, GitCommit, Star, GitFork, Sparkles, Loader2, FolderOpen } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -41,8 +41,7 @@ export function ProjectCard({
   } = repository
   
   const [isGenerating, setIsGenerating] = useState(false)
-  const [isLaunching, setIsLaunching] = useState(false)
-  const [runningUrl, setRunningUrl] = useState<string | null>(null)
+  const [isOpening, setIsOpening] = useState(false)
   const { updateRepoSummary } = useActivityStore()
   const { username, getDecryptedToken } = useAuthStore()
   
@@ -82,13 +81,13 @@ export function ProjectCard({
     }
   }
   
-  const handleLaunchProject = async (e: React.MouseEvent) => {
+  const handleOpenInKiro = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (isLaunching) return
+    if (isOpening) return
     
-    setIsLaunching(true)
+    setIsOpening(true)
     try {
-      const response = await fetch('/api/launch-project', {
+      const response = await fetch('/api/open-in-kiro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ projectName: name }),
@@ -100,14 +99,12 @@ export function ProjectCard({
         throw new Error(data.message || data.error)
       }
       
-      setRunningUrl(data.url)
-      window.open(data.url, '_blank')
-      toast.success(`Projet lancé sur ${data.url}`)
+      toast.success('Ouverture dans Kiro...')
     } catch (error: any) {
-      console.error('Error launching project:', error)
-      toast.error(error.message || 'Erreur lors du lancement')
+      console.error('Error opening in Kiro:', error)
+      toast.error(error.message || 'Projet non trouvé localement')
     } finally {
-      setIsLaunching(false)
+      setIsOpening(false)
     }
   }
   
@@ -152,36 +149,21 @@ export function ProjectCard({
           </Button>
         </div>
         
-        {/* Launch project button */}
-        <div className="flex gap-2">
-          <Button
-            variant={runningUrl ? "default" : "outline"}
-            size="sm"
-            className="flex-1 text-xs"
-            onClick={handleLaunchProject}
-            disabled={isLaunching}
-          >
-            {isLaunching ? (
-              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-            ) : (
-              <Play className="h-3 w-3 mr-1" />
-            )}
-            {isLaunching ? 'Lancement...' : runningUrl ? 'Ouvrir' : 'Lancer le projet'}
-          </Button>
-          {runningUrl && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-xs px-2"
-              onClick={(e) => {
-                e.stopPropagation()
-                window.open(runningUrl, '_blank')
-              }}
-            >
-              <ExternalLink className="h-3 w-3" />
-            </Button>
+        {/* Open in Kiro button */}
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full text-xs"
+          onClick={handleOpenInKiro}
+          disabled={isOpening}
+        >
+          {isOpening ? (
+            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+          ) : (
+            <FolderOpen className="h-3 w-3 mr-1" />
           )}
-        </div>
+          Ouvrir dans Kiro
+        </Button>
         
         {/* AI Summary or Description */}
         {aiSummary ? (
