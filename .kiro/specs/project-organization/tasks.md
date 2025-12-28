@@ -114,26 +114,26 @@ Tout le développement se fait sur une branche feature dédiée `feature/project
     - **Property 26: Global TODO Limit**
     - **Validates: Requirements 10.1, 10.2**
 
-- [ ] 6. Checkpoint - Core Logic Complete
+- [x] 6. Checkpoint - Core Logic Complete
   - Vérifier que tous les tests passent
   - Tester manuellement les opérations CRUD via la console
   - Vérifier la persistance LocalStorage
   - Demander à l'utilisateur si des questions se posent
 
-- [ ] 7. Composants UI - Tags
-  - [ ] 7.1 Créer le composant TagBadge
+- [x] 7. Composants UI - Tags
+  - [x] 7.1 Créer le composant TagBadge
     - Créer `src/components/organization/tag-badge.tsx`
     - Afficher le nom et la couleur du tag
     - Supporter le mode supprimable (avec X)
     - _Requirements: 1.5_
   
-  - [ ] 7.2 Créer le composant TagSelector
+  - [x] 7.2 Créer le composant TagSelector
     - Créer `src/components/organization/tag-selector.tsx`
     - Dropdown multi-select pour assigner des tags
     - Option pour créer un nouveau tag inline
     - _Requirements: 1.3, 1.4_
   
-  - [ ] 7.3 Créer le composant TagManager
+  - [x] 7.3 Créer le composant TagManager
     - Créer `src/components/organization/tag-manager.tsx`
     - Liste des tags avec édition/suppression
     - Formulaire de création de tag
