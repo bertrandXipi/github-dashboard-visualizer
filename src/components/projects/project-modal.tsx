@@ -8,7 +8,9 @@ import {
   GitFork,
   Calendar,
   BarChart3,
-  Clock
+  Clock,
+  Sparkles,
+  FileText
 } from 'lucide-react'
 import { format, startOfWeek, endOfWeek, isWithinInterval, subMonths } from 'date-fns'
 import { fr } from 'date-fns/locale'
@@ -37,7 +39,7 @@ interface ProjectModalProps {
 
 export function ProjectModal({ repository, open, onOpenChange }: ProjectModalProps) {
   const { commits } = useActivityStore()
-  const [activeTab, setActiveTab] = useState('activity')
+  const [activeTab, setActiveTab] = useState('summary')
   
   const repoCommits = useMemo(() => {
     if (!repository) return []
@@ -144,11 +146,90 @@ export function ProjectModal({ repository, open, onOpenChange }: ProjectModalPro
         </DialogHeader>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 overflow-hidden flex flex-col">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="summary">Résumé</TabsTrigger>
             <TabsTrigger value="activity">Activité</TabsTrigger>
-            <TabsTrigger value="stats">Statistiques</TabsTrigger>
+            <TabsTrigger value="stats">Stats</TabsTrigger>
             <TabsTrigger value="timeline">Timeline</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="summary" className="flex-1 overflow-hidden">
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-4 pr-4">
+                {/* AI Summary */}
+                {repository.aiSummary ? (
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Sparkles className="h-4 w-4 text-primary" />
+                        <h3 className="text-sm font-medium">Résumé IA</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed">
+                        {repository.aiSummary}
+                      </p>
+                      {repository.aiSummaryDate && (
+                        <p className="text-xs text-muted-foreground mt-3">
+                          Généré {formatDate(repository.aiSummaryDate, 'relative')}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card className="bg-muted/50">
+                    <CardContent className="p-4 text-center">
+                      <Sparkles className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">
+                        Aucun résumé IA généré pour ce projet
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Clique sur &quot;Générer un résumé IA&quot; sur la carte du projet
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {/* Description GitHub */}
+                {repository.description && (
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-medium">Description GitHub</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {repository.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {/* Project info */}
+                <Card>
+                  <CardContent className="p-4">
+                    <h3 className="text-sm font-medium mb-3">Informations</h3>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Langage</p>
+                        <p className="font-medium">{repository.language || 'Non spécifié'}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Créé le</p>
+                        <p className="font-medium">{formatDate(repository.createdAt, 'eu')}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Dernière activité</p>
+                        <p className="font-medium">{repository.lastCommitDate ? formatDate(repository.lastCommitDate, 'relative') : 'Jamais'}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Visibilité</p>
+                        <p className="font-medium">{repository.isPrivate ? 'Privé' : 'Public'}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </ScrollArea>
+          </TabsContent>
           
           <TabsContent value="activity" className="flex-1 overflow-hidden">
             <ScrollArea className="h-[400px]">

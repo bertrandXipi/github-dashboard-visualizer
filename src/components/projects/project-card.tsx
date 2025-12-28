@@ -185,8 +185,8 @@ export function ProjectCard({
         
         {/* AI Summary or Description */}
         {aiSummary ? (
-          <div className="space-y-2">
-            <p className="text-sm text-foreground">
+          <div className="space-y-1">
+            <p className="text-sm text-foreground line-clamp-3">
               {aiSummary}
             </p>
             <Button
@@ -201,7 +201,7 @@ export function ProjectCard({
               ) : (
                 <Sparkles className="h-3 w-3 mr-1" />
               )}
-              {isGenerating ? 'Régénération...' : 'Régénérer le résumé'}
+              {isGenerating ? 'Régénération...' : 'Régénérer'}
             </Button>
           </div>
         ) : description ? (
