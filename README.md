@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GitHub Activity Tracker
 
-## Getting Started
+Un tableau de bord personnel pour visualiser et suivre ton activité GitHub. Toutes les données restent locales dans ton navigateur.
 
-First, run the development server:
+## Fonctionnalités
+
+- 📊 **Dashboard** - Vue d'ensemble de ton activité quotidienne et hebdomadaire
+- 📁 **Projets** - Liste de tous tes repositories avec filtres et statistiques
+- 🔍 **Recherche** - Recherche dans tes commits, projets et fichiers
+- 📝 **Rapports** - Génération de rapports hebdomadaires/mensuels en Markdown
+- 🌙 **Thème sombre** - Support du mode clair/sombre
+- 📱 **Responsive** - Fonctionne sur desktop, tablette et mobile
+- 🔒 **Privé** - Toutes les données restent dans ton navigateur (LocalStorage)
+
+## Installation
 
 ```bash
+# Cloner le repo
+git clone <repo-url>
+cd github-dashboard-visualizer
+
+# Installer les dépendances
+npm install
+
+# Lancer en développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvre [http://localhost:3000](http://localhost:3000) dans ton navigateur.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Token GitHub
 
-## Learn More
+Pour accéder à tes données GitHub, tu auras besoin d'un Personal Access Token :
 
-To learn more about Next.js, take a look at the following resources:
+1. Va sur [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
+2. Clique sur "Generate new token (classic)"
+3. Donne un nom au token (ex: "Activity Tracker")
+4. Sélectionne les scopes : `repo` (pour les repos privés) ou `public_repo` (repos publics uniquement)
+5. Génère et copie le token
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Le token est chiffré avec AES-GCM avant d'être stocké dans le navigateur.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Stack technique
 
-## Deploy on Vercel
+- **Framework** : Next.js 14 (App Router)
+- **UI** : shadcn/ui + Tailwind CSS
+- **State** : Zustand
+- **Charts** : Recharts
+- **Tests** : Vitest
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev      # Serveur de développement
+npm run build    # Build de production
+npm run start    # Serveur de production
+npm run lint     # Linting
+npm run test     # Tests
+```
+
+## Structure du projet
+
+```
+src/
+├── app/           # Pages Next.js (App Router)
+├── components/    # Composants React
+│   ├── charts/    # Graphiques (heatmap, bar chart)
+│   ├── dashboard/ # Composants du dashboard
+│   ├── layout/    # Layout (sidebar, header)
+│   ├── projects/  # Composants projets
+│   └── ui/        # Composants shadcn/ui
+├── hooks/         # Custom hooks
+├── lib/           # Utilitaires
+│   ├── github/    # API GitHub
+│   ├── storage/   # Cache LocalStorage
+│   ├── stores/    # Stores Zustand
+│   └── utils/     # Fonctions utilitaires
+└── types/         # Types TypeScript
+```
+
+## Licence
+
+MIT
