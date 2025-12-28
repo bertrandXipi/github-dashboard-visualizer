@@ -97,8 +97,8 @@ The plan prioritizes the MVP (authentication, dashboard, repository list, cachin
     - **Property 29: Most Used Language Calculation**
     - **Validates: Requirements 3.5**
 
-- [ ] 6. GitHub API Service
-  - [ ] 6.1 Implement GitHubAPI class
+- [x] 6. GitHub API Service
+  - [x] 6.1 Implement GitHubAPI class
     - Implement getUserProfile() to fetch user data
     - Implement getRepositories() to fetch all repos
     - Implement getCommits() for a repository
